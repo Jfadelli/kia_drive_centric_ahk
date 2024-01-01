@@ -4,27 +4,29 @@ CoordMode, Mouse, Screen
 global GuiTitle := ""
 global TextSelection := ""
 global ModelSelection := ""
+global EmailSelection := ""
 global CustomerTypeSelection := ""
 global ActionSelection := ""
 
-loc := [
-    {"EmailCategory", [ 950, 396]},
-    {"TemplatesButton", [950 ,473]},
-    {"TemplateCategory", [1100 ,400]},
-    {"TemplateSelection1", [1100, 445]},
-    {"TemplateSelection2", [1100, 460]},
-    {"TemplateSelection3", [1100, 480]},
-    {"TemplateSelection4", [1100,500]},
-    {"Call", [660, 350]},
-    {"Email", [765, 350]},
-    {"Text", [870, 350]}
-];
+global TemplateCatagoryDropDownMenu := {x: 950, y: 396}
+global PersonalTemplateButton := {x: 950, y:473}
+global TemplateCategoryDropDownMenu:= {x: 1100, y:400}
+global TemplateSelection1:= {x:1100, y:445}
+global TemplateSelection2:= {x: 100, y:460}
+global TemplateSelection3:= {x: 1100, y: 480}
+global TemplateSelection4:= {x: 1100, y:500}
+global CallTabButton:= {x:660, y:350}
+global EmailTabButton:= {x:765, y:350}
+global TextTabButton:= {x: 870, y: 350}
+global OptInButton := {x:1183, y:525}
 
 
 `::
+    Gui, Destroy
     GuiTitle := ""
     TextSelection := ""
     ModelSelection := ""
+    EmailSelection := ""
     CustomerTypeSelection := ""
     ActionSelection := ""
     GuiTitle := "Customer Selector"
@@ -47,8 +49,7 @@ HandleActionSelection:
     if (ActionSelection = "Text") 
         {
             ShowGUI("Text Selector")
-        }
-        else if (ActionSelection = "Email") {
+    } else if (ActionSelection = "Email") {
             ShowGUI("Email Selector")
         }
     return
@@ -62,7 +63,6 @@ HandleTextSelection:
     Gui, Submit
     Gui, Destroy
     ShowGUI("Confirmation Screen")
-
     return
 
 HandleEmailSelection:
@@ -72,21 +72,39 @@ HandleEmailSelection:
     return
 
 HandleConfirmation:
-    Gui, Add, Text, , Customer Type: %CustomerTypeSelection%
-    Gui, Add, Text, , Action: %ActionSelection%
-    Gui, Add, Text, , Communication Selection: %TextSelection%%EmailSelection%
-    Gui, Add, Text, , Model: %ModelSelection%
-    Gui, Add, Button, Hidden w0 h0 Default gMainLoop, Save
+    Gui, Submit
+    return
 
+; Condition Vars
+; TextSelection = ""
+; EmailSelection = ""
+; ModelSelection = ""
+; CustomerTypeSelection = ""
+; ActionSelection = ""
 MainLoop:
     Gui, Destroy
-    if(TextSelection = "Opt in") {
+    if(TextSelection = "Opt In") {
+        MsgBox,,,% "X:" OptInButton.x "| Y:"OptInButton.y "Text Selection:" TextSelection
         MouseGetPos, xOrigin, yOrigin
-        Click, loc.EmailCategory[0], loc.EmailCategory[1]
-        Sleep, 10
+        Click, OptInButton.x, OptInButton.y
+        Sleep, 500
         MouseMove, %xOrigin%, %yOrigin%, 0
-    }
+    } if(ActionSelection "Email") {
+        if (EmailSelection = "Follow up 1"){
+            MouseGetPos, xOrigin, yOrigin
+            Click, TemplateCatagoryDropDownMenu.x, TemplateCatagoryDropDownMenu.y
+            Sleep, 500
+            Click, PersonalTemplateButton.x,PersonalTemplateButton.y
+            Sleep, 500
+            Click, TemplateDropDownMenu.x, TemplateDropDownMenu.y
+            Sleep, 500
+            Click, TemplateSelection2.x,TemplateSelection2.y
+            Sleep, 500
+            MouseMove, %xOrigin%, %yOrigin%, 0 
+        }
 
+    }
+    return
 
 ShowGUI(GuiTitle) {
     if (GuiTitle = "Customer Selector") {
@@ -119,6 +137,12 @@ ShowGUI(GuiTitle) {
         Gui, Add, Text, , Press 2 for Follow up 1
         Gui, Add, Text, , Press 3 for Follow up 2
         Gui, Add, Button, Hidden w0 h0 Default gHandleEmailSelection, Save
+    } else if (GuiTitle = "Confirmation Screen") {
+        Gui, Add, Text, , Customer Type: %CustomerTypeSelection%
+        Gui, Add, Text, , Action: %ActionSelection%
+        Gui, Add, Text, , Communication Selection: %EmailSelection%
+        Gui, Add, Text, , Model: %ModelSelection%
+        Gui, Add, Button, Hidden w0 h0 Default gMainLoop, Save
     }
     Gui, Show, w300 h400, %GuiTitle%
     return
@@ -160,7 +184,7 @@ Escape:: Gosub, HandleEscape
 #IfWinActive
 
 #IfWinActive, Text Selector
-1:: TextSelection := "Opt in", Gosub, HandleTextSelection
+1:: TextSelection := "Opt In", Gosub, HandleTextSelection
 2:: TextSelection := "Initial Text", Gosub, HandleTextSelection
 3:: TextSelection := "Follow up 1", Gosub, HandleTextSelection
 4:: TextSelection := "Follow up 2", Gosub, HandleTextSelection
