@@ -7,18 +7,39 @@ global ModelSelection := ""
 global EmailSelection := ""
 global CustomerTypeSelection := ""
 global ActionSelection := ""
+global NewInquirySelection := ""
+global ExistingCustomerSelection := ""
 
-global TemplateCatagoryDropDownMenu := {x: 950, y: 396}
-global PersonalTemplateButton := {x: 950, y:473}
-global TemplateCategoryDropDownMenu:= {x: 1100, y:400}
-global TemplateSelection1:= {x:1100, y:445}
-global TemplateSelection2:= {x: 100, y:460}
-global TemplateSelection3:= {x: 1100, y: 480}
-global TemplateSelection4:= {x: 1100, y:500}
-global CallTabButton:= {x:660, y:350}
-global EmailTabButton:= {x:765, y:350}
-global TextTabButton:= {x: 870, y: 350}
-global OptInButton := {x:1183, y:525}
+global TemplateCatagoryDropDownMenu := {x: 950, y: 396, sleepTime:500}
+global PersonalTemplateButton := {x: 920, y:465, sleepTime:500}
+global TemplateDropDownMenu:= {x:1100,y:400, sleepTime:500}
+global TemplateSelection1:= {x:1100, y:445, sleepTime:0}
+global TemplateSelection2:= {x: 1100, y:460, sleepTime:0}
+global TemplateSelection3:= {x: 1100, y: 480, sleepTime:0}
+global TemplateSelection4:= {x: 1100, y:500, sleepTime:0}
+global CallTabButton:= {x:660, y:350, sleepTime:250}
+global EmailTabButton:= {x:765, y:350, sleepTime:250}
+global TextTabButton:= {x: 870, y: 350, sleepTime:250}
+global OptInButton := {x:1183, y:525, sleepTime:100}
+global CallButton := {x:1184 , y:411 , sleepTime:500}
+global RefreshSecondBrowserButton := {x:93, y:-1017 , sleepTime:2500}
+global EndCallButton := {x:1170, y:120 , sleepTime:1000}
+global CallOutcomeDropdownMenu := {x:830, y:419, sleepTime:500}
+global CallOutcomeDidNotLeaveVoicemail := {x:830, y:499, sleepTime:250}
+global LogCallButton := {x:1200, y:628, sleepTime:250}
+global Dwell := 500
+
+
+MoveClick(obj) {
+    ; Extract relevant information from the object
+    x := obj.x ; X-coordinate relative to the screen
+    y := obj.y ; Y-coordinate relative to the screen
+    sleepTime := obj.sleepTime
+    MouseMove, % x, % y
+    Sleep, 25
+    Click
+    Sleep, % sleepTime
+}
 
 
 `::
@@ -29,6 +50,9 @@ global OptInButton := {x:1183, y:525}
     EmailSelection := ""
     CustomerTypeSelection := ""
     ActionSelection := ""
+    NewInquirySelection := ""
+    ExistingCustomerSelection := ""
+
     GuiTitle := "Customer Selector"
     ShowGui(GuiTitle)
     return
@@ -40,18 +64,35 @@ HandleEscape:
 HandleCustomerTypeSelection:
     Gui, Submit
     Gui, Destroy
-    ShowGUI("Action Selector")
-    return
+    if (CustomerTypeSelection = "New Inquiry") {
+        ShowGUI("New Inquiry Selector")
+        ; MsgBox, , % CustomerTypeSelection
+        return
+    } else if (CustomerTypeSelection = "Existing Customer"){
+        ShowGUI("Existing Customer Selector")
+        ; MsgBox, , % CustomerTypeSelection
+        return
+    } else if (CustomerTypeSelection = "Opt In - Quick"){
+        ShowGUI("Confirmation Screen")
+        ; msgbox, Opt In - Quick
+        return
+    }
+    return  
 
-HandleActionSelection:
+HandleNewInquirySelection:
     Gui, Submit
     Gui, Destroy
-    if (ActionSelection = "Text") 
-        {
-            ShowGUI("Text Selector")
-    } else if (ActionSelection = "Email") {
-            ShowGUI("Email Selector")
-        }
+    ShowGUI("Confirmation Screen")
+    return
+
+HandleExistingCustomerSelection:
+    Gui, Submit
+    Gui, Destroy
+    if (ExistingCustomerSelection = "Text") { 
+        ShowGUI("Text Selector")
+    } else if (ExistingCustomerSelection = "Email") {
+        ShowGUI("Email Selector")
+    }
     return
 
 HandleModelSelection:
@@ -83,27 +124,46 @@ HandleConfirmation:
 ; ActionSelection = ""
 MainLoop:
     Gui, Destroy
-    if(TextSelection = "Opt In") {
-        MsgBox,,,% "X:" OptInButton.x "| Y:"OptInButton.y "Text Selection:" TextSelection
+    if(CustomerTypeSelection = "New Inquiry"){
         MouseGetPos, xOrigin, yOrigin
-        Click, OptInButton.x, OptInButton.y
-        Sleep, 500
-        MouseMove, %xOrigin%, %yOrigin%, 0
-    } if(ActionSelection "Email") {
-        if (EmailSelection = "Follow up 1"){
-            MouseGetPos, xOrigin, yOrigin
-            Click, TemplateCatagoryDropDownMenu.x, TemplateCatagoryDropDownMenu.y
-            Sleep, 500
-            Click, PersonalTemplateButton.x,PersonalTemplateButton.y
-            Sleep, 500
-            Click, TemplateDropDownMenu.x, TemplateDropDownMenu.y
-            Sleep, 500
-            Click, TemplateSelection2.x,TemplateSelection2.y
-            Sleep, 500
-            MouseMove, %xOrigin%, %yOrigin%, 0 
+        if (NewInquirySelection = "Opt In" ){
+            MoveClick(TextTabButton)
+            MoveClick(OptInButton)
+        } else if (NewInquirySelection = "New Inquiry Email") {
+            MoveClick(EmailTabButton)
+            MoveClick(TemplateCatagoryDropDownMenu)
+            MoveClick(PersonalTemplateButton)
+            MoveClick(TemplateDropDownMenu)
+            MoveClick(TemplateSelection1)
+        } else if (NewInquirySelection = "Quick Call") {
+            MoveClick(CallTabButton)
+            MoveClick(CallButton)
+            MoveClick(RefreshSecondBrowserButton)
+            MoveClick(EndCallButton)
+            MoveClick(CallOutcomeDropdownMenu)
+            MoveClick(CallOutcomeDidNotLeaveVoicemail)
+            MoveClick(LogCallButton)
         }
+        MouseMove, %xOrigin%, %yOrigin%, 0
+        return
+    } else if (CustomerTypeSelection = "Existing Customer"){
+        msgbox, 123456
+        if (ExistingCustomerSelection = "Text") {
+            msgbox, 12345
 
-    }
+        } else if (ExistingCustomerSelection = "Email") {
+
+        } else if (ExistingCustomerSelection = "Call") {
+
+        }
+        return
+    } else if (CustomerTypeSelection = "Opt In - Quick") {
+        MouseGetPos, xOrigin, yOrigin
+        MoveClick(TextTabButton)
+        MoveClick(OptInButton)
+        MouseMove, %xOrigin%, %yOrigin%, 0
+        return
+    } 
     return
 
 ShowGUI(GuiTitle) {
@@ -111,17 +171,23 @@ ShowGUI(GuiTitle) {
         Gui +ToolWindow +AlwaysOnTop
         Gui, Add, Text,, Select an option:
         Gui, Add, Text, , Press 1 for New Inquiry
-        Gui, Add, Text, , Press 2 for Mining - Cold Follow Up
-        Gui, Add, Text, , Press 3 for Trade In
-        Gui, Add, Text, , Press 4 for 1 Year Anniversary
+        Gui, Add, Text, , Press 2 for Existing Customer
+        Gui, Add, Text, , Press 3 for Opt In - Quick
         Gui, Add, Button, Hidden w0 h0 Default gHandleCustomerTypeSelection, Save
-    } else if (GuiTitle = "Action Selector") {
+    } else if (GuiTitle = "New Inquiry Selector") {
         Gui +ToolWindow +AlwaysOnTop
         Gui, Add, Text,, Select an option:
-        Gui, Add, Text, , Press 1 for Email
-        Gui, Add, Text, , Press 2 for Text
+        Gui, Add, Text, , Press 1 for Opt In
+        Gui, Add, Text, , Press 2 for New Inquiry Email
+        Gui, Add, Text, , Press 3 for Quick Call
+        Gui, Add, Button, Hidden w0 h0 Default gHandleNewInquirySelection, Save
+    } else if (GuiTitle = "Existing Customer Selector") {
+        Gui +ToolWindow +AlwaysOnTop
+        Gui, Add, Text,, Select an option:
+        Gui, Add, Text, , Press 1 for Text
+        Gui, Add, Text, , Press 2 for Email
         Gui, Add, Text, , Press 3 for Call
-        Gui, Add, Button, Hidden w0 h0 Default gHandleActionSelection, Save
+        Gui, Add, Button, Hidden w0 h0 Default gHandleExistingCustomerSelection, Save
     } else if (GuiTitle = "Text Selector") {
         Gui +ToolWindow +AlwaysOnTop
         Gui, Add, Text,, Select an option:
@@ -139,6 +205,7 @@ ShowGUI(GuiTitle) {
         Gui, Add, Button, Hidden w0 h0 Default gHandleEmailSelection, Save
     } else if (GuiTitle = "Confirmation Screen") {
         Gui, Add, Text, , Customer Type: %CustomerTypeSelection%
+        Gui, Add, Text, , New Inquiry: %NewInquirySelection%
         Gui, Add, Text, , Action: %ActionSelection%
         Gui, Add, Text, , Communication Selection: %EmailSelection%
         Gui, Add, Text, , Model: %ModelSelection%
@@ -149,17 +216,23 @@ ShowGUI(GuiTitle) {
 }
 
 #IfWinActive, Customer Selector
-1:: CustomerTypeSelection := "New Inquiry", Gosub, HandleCustomerTypeSelection ; Pressing 1 sets Selection and triggers ButtonSave1
-2:: CustomerTypeSelection := "Mining", Gosub, HandleCustomerTypeSelection
-3:: CustomerTypeSelection := "Trade In", Gosub, HandleCustomerTypeSelection
-4:: CustomerTypeSelection := "1 Year Anniversary", GoSub, HandleCustomerTypeSelection
+1:: CustomerTypeSelection := "New Inquiry", Gosub, HandleCustomerTypeSelection ; Pressing 1 sets Selection and triggers SubRoutine HandleCustomerTypeSelection
+2:: CustomerTypeSelection := "Existing Customer", Gosub, HandleCustomerTypeSelection
+3:: CustomerTypeSelection := "Opt In - Quick", Gosub, HandleCustomerTypeSelection
 Escape:: Gosub, HandleEscape
 #IfWinActive
 
-#IfWinActive, Action Selector
-1:: ActionSelection := "Email", Gosub, HandleActionSelection ; Pressing 1 sets Selection and triggers ButtonSave1
-2:: ActionSelection := "Text", Gosub, HandleActionSelection
-3:: ActionSelection := "Call", Gosub, HandleActionSelection
+#IfWinActive, New Inquiry Selector
+1:: NewInquirySelection := "Opt In", Gosub, HandleNewInquirySelection
+2:: NewInquirySelection := "New Inquiry Email", Gosub, HandleNewInquirySelection
+3:: NewInquirySelection := "Quick Call", Gosub, HandleNewInquirySelection
+Escape:: Gosub, HandleEscape
+#IfWinActive
+
+#IfWinActive, Existing Customer Selector
+1:: ActionSelection := "Text", Gosub, HandleExistingCustomerSelection ; Pressing 1 sets Selection and triggers ButtonSave1
+2:: ActionSelection := "Email", Gosub, HandleExistingCustomerSelection
+3:: ActionSelection := "Call", Gosub, HandleExistingCustomerSelection
 Escape:: Gosub, HandleEscape
 #IfWinActive
 
@@ -197,3 +270,5 @@ Escape:: Gosub, HandleEscape
 3:: EmailSelection := "Follow up 2", Gosub, HandleEmailSelection
 Escape:: Gosub, HandleEscape
 #IfWinActive
+
+
