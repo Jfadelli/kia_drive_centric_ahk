@@ -29,7 +29,6 @@ global CallOutcomeDidNotLeaveVoicemail := {x:830, y:499, sleepTime:250}
 global LogCallButton := {x:1200, y:628, sleepTime:250}
 global Dwell := 500
 
-
 MoveClick(obj) {
     ; Extract relevant information from the object
     x := obj.x ; X-coordinate relative to the screen
@@ -40,7 +39,6 @@ MoveClick(obj) {
     Click
     Sleep, % sleepTime
 }
-
 
 `::
     Gui, Destroy
@@ -90,8 +88,10 @@ HandleExistingCustomerSelection:
     Gui, Destroy
     if (ExistingCustomerSelection = "Text") { 
         ShowGUI("Text Selector")
+        return
     } else if (ExistingCustomerSelection = "Email") {
         ShowGUI("Email Selector")
+        return
     }
     return
 
@@ -116,12 +116,6 @@ HandleConfirmation:
     Gui, Submit
     return
 
-; Condition Vars
-; TextSelection = ""
-; EmailSelection = ""
-; ModelSelection = ""
-; CustomerTypeSelection = ""
-; ActionSelection = ""
 MainLoop:
     Gui, Destroy
     if(CustomerTypeSelection = "New Inquiry"){
@@ -152,7 +146,7 @@ MainLoop:
             msgbox, 12345
 
         } else if (ExistingCustomerSelection = "Email") {
-
+            
         } else if (ExistingCustomerSelection = "Call") {
 
         }
@@ -230,9 +224,9 @@ Escape:: Gosub, HandleEscape
 #IfWinActive
 
 #IfWinActive, Existing Customer Selector
-1:: ActionSelection := "Text", Gosub, HandleExistingCustomerSelection ; Pressing 1 sets Selection and triggers ButtonSave1
-2:: ActionSelection := "Email", Gosub, HandleExistingCustomerSelection
-3:: ActionSelection := "Call", Gosub, HandleExistingCustomerSelection
+1:: ExistingCustomerSelection := "Text", Gosub, HandleExistingCustomerSelection ; Pressing 1 sets Selection and triggers ButtonSave1
+2:: ExistingCustomerSelection := "Email", Gosub, HandleExistingCustomerSelection
+3:: ExistingCustomerSelection := "Call", Gosub, HandleExistingCustomerSelection
 Escape:: Gosub, HandleEscape
 #IfWinActive
 
