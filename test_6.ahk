@@ -4,6 +4,7 @@ CoordMode, Mouse, Screen
 global GuiTitle := ""
 global ActionSelection := ""
 
+global Dwell := 500
 global TemplateCatagoryDropDownMenu := {x: 950, y: 396, sleepTime:500}
 global PersonalTemplateButton := {x: 920, y:465, sleepTime:500}
 global TemplateDropDownMenu:= {x:1100,y:400, sleepTime:500}
@@ -23,7 +24,9 @@ global CallOutcomeDidNotLeaveVoicemail := {x:830, y:499, sleepTime:250}
 global LogCallButton := {x:1200, y:628, sleepTime:250}
 global TextBoxTextArea := {x:536, y:401, sleepTime: 250}
 global FirstName := {x:633, y:174, sleepTime:250}
-global Dwell := 500
+global FirstNameUnderlineSpot := {x:600, y: 401, sleepTime:10}
+
+
 
 MoveClick(obj) {
     ; Extract relevant information from the object
@@ -36,7 +39,19 @@ MoveClick(obj) {
     Sleep, % sleepTime
 }
 
-`::
+MoveDoubleClick(obj){
+    ; Extract relevant information from the object
+    x := obj.x ; X-coordinate relative to the screen
+    y := obj.y ; Y-coordinate relative to the screen
+    sleepTime := obj.sleepTime 
+    MouseMove, % x, % y
+    Sleep, 5
+    Click
+    Click
+    Sleep, % sleepTime
+}
+
+~::
     Gui, Destroy
     ActionSelection := ""
     GuiTitle := "Action Selector"
@@ -93,6 +108,10 @@ MainLoop:
             MsgBox, Failed to open the subject file., 100
         }
         send, ^v
+        MoveDoubleClick(FirstName)
+        send, ^c
+        MoveDoubleClick(FirstNameUnderlineSpot)
+        send, ^v
     } else if (ActionSelection = "Email - Trade In") {
         MoveClick(EmailTabButton)
         MoveClick(TemplateCatagoryDropDownMenu)
@@ -115,6 +134,11 @@ MainLoop:
             MsgBox, Failed to open the subject file., 100
         }
         send, ^v
+        MoveDoubleClick(FirstName)
+        send, ^c
+        MoveDoubleClick(FirstNameUnderlineSpot)
+        send, ^v
+
 
     } 
     MouseMove, %xOrigin%, %yOrigin%, 0
@@ -133,8 +157,8 @@ ShowGUI(GuiTitle) {
         Gui, Add, Text, , Press 4 for Email - Follow Up
         Gui, Add, Text, , Press 5 for Text - Follow Up
         Gui, Add, Text, , ---------------------------------
-        Gui, Add, Text, , Press 5 for Email - Trade In
-        Gui, Add, Text, , Press 6 for Text - Trade In
+        Gui, Add, Text, , Press 6 for Email - Trade In
+        Gui, Add, Text, , Press 7 for Text - Trade In
         Gui, Add, Button, Hidden w0 h0 Default gHandleActionSelection, Save
     } 
     Gui, Show, w300 h400, %GuiTitle%
