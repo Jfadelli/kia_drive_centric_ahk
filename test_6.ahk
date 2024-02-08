@@ -24,7 +24,8 @@ global CallOutcomeDidNotLeaveVoicemail := {x:830, y:499, sleepTime:250}
 global LogCallButton := {x:1200, y:628, sleepTime:250}
 global TextBoxTextArea := {x:536, y:401, sleepTime: 250}
 global FirstName := {x:633, y:174, sleepTime:250}
-global FirstNameUnderlineSpot := {x:600, y: 401, sleepTime:10}
+global FirstNameUnderlineSpot := {x:650, y: 401, sleepTime:10}
+global VehicleUnderlineSpot := {x:785, y: 425, sleepTime:10}
 
 
 
@@ -51,7 +52,7 @@ MoveDoubleClick(obj){
     Sleep, % sleepTime
 }
 
-~::
+`::
     Gui, Destroy
     ActionSelection := ""
     GuiTitle := "Action Selector"
@@ -112,6 +113,10 @@ MainLoop:
         send, ^c
         MoveDoubleClick(FirstNameUnderlineSpot)
         send, ^v
+        send, {Backspace}
+        sleep, 10
+        MoveDoubleClick(VehicleUnderlineSpot)
+
     } else if (ActionSelection = "Email - Trade In") {
         MoveClick(EmailTabButton)
         MoveClick(TemplateCatagoryDropDownMenu)
@@ -138,6 +143,9 @@ MainLoop:
         send, ^c
         MoveDoubleClick(FirstNameUnderlineSpot)
         send, ^v
+        send, {Backspace}
+        sleep, 10
+        MoveDoubleClick(VehicleUnderlineSpot)
 
 
     } 
