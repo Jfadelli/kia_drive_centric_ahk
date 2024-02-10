@@ -1,0 +1,515 @@
+SetTitleMatchMode, 2
+CoordMode, Mouse, Screen
+
+global GuiTitle := ""
+global ActionSelection := ""
+
+global Dwell := 500
+global TemplateCatagoryDropDownMenu := {x: 950, y: 396, sleepTime:500}
+global PersonalTemplateButton := {x: 920, y:465, sleepTime:500}
+global TemplateDropDownMenu:= {x:1100,y:400, sleepTime:500}
+global TemplateSelection1:= {x:1100, y:445, sleepTime:0}
+global TemplateSelection2:= {x: 1100, y:460, sleepTime:0}
+global TemplateSelection3:= {x: 1100, y: 480, sleepTime:0}
+global TemplateSelection4:= {x: 1100, y:500, sleepTime:0}
+global TemplateSelection5:= {x: 1100, y:565, sleepTime:0}
+global TemplateSelection6:= {x: 1100, y:585, sleepTime:0}
+global TemplateSelection7:= {x: 1100, y:605, sleepTime:0}
+global CallTabButton:= {x:660, y:350, sleepTime:250}
+global EmailTabButton:= {x:765, y:350, sleepTime:750}
+global TextTabButton:= {x: 870, y: 350, sleepTime:250}
+global OptInButton := {x:1183, y:525, sleepTime:100}
+global CallButton := {x:1184 , y:411 , sleepTime:500}
+global RefreshSecondBrowserButton := {x:93, y:-1017 , sleepTime:2500}
+global EndCallButton := {x:1170, y:120 , sleepTime:1000}
+global CallOutcomeDropdownMenu := {x:830, y:419, sleepTime:500}
+global CallOutcomeDidNotLeaveVoicemail := {x:830, y:499, sleepTime:250}
+global LogCallButton := {x:1200, y:628, sleepTime:250}
+global TextBoxTextArea := {x:536, y:401, sleepTime: 250}
+global FirstName := {x:633, y:174, sleepTime:250}
+global FirstNameUnderlineSpot := {x:650, y: 401, sleepTime:10}
+global VehicleUnderlineSpot := {x:785, y: 425, sleepTime:10}
+global EmailSendButton := {x:1184, y:938, sleepTime: 100}
+global TextSendButton := {x:1184, y:938, sleepTime: 100}
+
+MoveClick(obj) {
+    ; Extract relevant information from the object
+    x := obj.x ; X-coordinate relative to the screen
+    y := obj.y ; Y-coordinate relative to the screen
+    sleepTime := obj.sleepTime
+    MouseMove, % x, % y
+    Sleep, 25
+    Click
+    Sleep, % sleepTime
+}
+
+MoveDoubleClick(obj){
+    ; Extract relevant information from the object
+    x := obj.x ; X-coordinate relative to the screen
+    y := obj.y ; Y-coordinate relative to the screen
+    sleepTime := obj.sleepTime 
+    MouseMove, % x, % y
+    Sleep, 5
+    Click
+    Click
+    Sleep, % sleepTime
+}
+
+`::
+    Gui, Destroy
+    ActionSelection := ""
+    GuiTitle := "Action Selector"
+    ShowGui(GuiTitle)
+    return
+
+HandleActionSelection:
+    Gui, Destroy
+    Gosub, MainLoop
+
+HandleEscape:
+    Gui, Destroy
+    return
+
+MainLoop:
+    Gui, Destroy
+    MouseGetPos, xOrigin, yOrigin
+    if(ActionSelection = "Quick Call"){
+        MoveClick(CallTabButton)
+        MoveClick(CallButton)
+        MoveClick(RefreshSecondBrowserButton)
+        MoveClick(EndCallButton)
+        MoveClick(CallOutcomeDropdownMenu)
+        MoveClick(CallOutcomeDidNotLeaveVoicemail)
+        MoveClick(LogCallButton)
+    } else if (ActionSelection = "Email - New Inquiry") {
+        MoveClick(EmailTabButton)
+        MoveClick(TemplateCatagoryDropDownMenu)
+        MoveClick(PersonalTemplateButton)
+        MoveClick(TemplateDropDownMenu)
+        MoveClick(TemplateSelection1)
+    } else if (ActionSelection = "Text - Opt In" ){
+        MoveClick(TextTabButton)
+        MoveClick(OptInButton)
+    } else if (ActionSelection = "Email - Follow Up") {
+        MoveClick(EmailTabButton)
+        MoveClick(TemplateCatagoryDropDownMenu)
+        MoveClick(PersonalTemplateButton)
+        MoveClick(TemplateDropDownMenu)
+        MoveClick(TemplateSelection2)
+    } else if (ActionSelection = "Text - Follow Up") {
+        MoveClick(TextTabButton)
+        MoveClick(TextBoxTextArea)
+        filePathSubject := "C:\Users\jfadelli\Desktop\AHK\txt files\texts\text_2.txt"
+        fileSubject := FileOpen(filePathSubject, "r")
+        if (fileSubject)
+        {
+            fileSubjectContents := fileSubject.Read()
+            fileSubject.Close()
+            clipboard := fileSubjectContents
+        }
+        else
+        {
+            MsgBox, Failed to open the subject file., 100
+        }
+        send, ^v
+        MoveDoubleClick(FirstName)
+        send, ^c
+        MoveDoubleClick(FirstNameUnderlineSpot)
+        send, ^v
+        send, {Backspace}
+        sleep, 10
+        MoveDoubleClick(VehicleUnderlineSpot)
+
+    } else if (ActionSelection = "Email - Trade In") {
+        MoveClick(EmailTabButton)
+        MoveClick(TemplateCatagoryDropDownMenu)
+        MoveClick(PersonalTemplateButton)
+        MoveClick(TemplateDropDownMenu)
+        MoveClick(TemplateSelection3)
+    } else if (ActionSelection = "Text - Trade In") {
+        MoveClick(TextTabButton)
+        MoveClick(TextBoxTextArea)
+        filePathSubject := "C:\Users\jfadelli\Desktop\AHK\txt files\texts\trade_in_text.txt"
+        fileSubject := FileOpen(filePathSubject, "r")
+        if (fileSubject)
+        {
+            fileSubjectContents := fileSubject.Read()
+            fileSubject.Close()
+            clipboard := fileSubjectContents
+        }
+        else
+        {
+            MsgBox, Failed to open the subject file., 100
+        }
+        send, ^v
+        MoveDoubleClick(FirstName)
+        send, ^c
+        MoveDoubleClick(FirstNameUnderlineSpot)
+        send, ^v
+        send, {Backspace}
+        sleep, 10
+        MoveDoubleClick(VehicleUnderlineSpot)
+
+    } else if (ActionSelection = "Email - Mining") {
+        MoveClick(EmailTabButton)
+        MoveClick(TemplateCatagoryDropDownMenu)
+        MoveClick(PersonalTemplateButton)
+        MoveClick(TemplateDropDownMenu)
+        MoveClick(TemplateSelection5)
+    }
+    MouseMove, %xOrigin%, %yOrigin%, 0
+        return
+    
+    return
+
+ShowGUI(GuiTitle) {
+    if (GuiTitle = "Action Selector") {
+        Gui +ToolWindow +AlwaysOnTop
+        Gui, Add, Text,, Select an option:
+        Gui, Add, Text, , Press 1 for Quick Call
+        Gui, Add, Text, , Press 2 for Email - New Inquiry
+        Gui, Add, Text, , Press 3 for Text - Opt In
+        Gui, Add, Text, , ---------------------------------
+        Gui, Add, Text, , Press 4 for Email - Follow Up
+        Gui, Add, Text, , Press 5 for Text - Follow Up
+        Gui, Add, Text, , ---------------------------------
+        Gui, Add, Text, , Press 6 for Email - Trade In
+        Gui, Add, Text, , Press 7 for Text - Trade In
+        Gui, Add, Text, , ---------------------------------
+        Gui, Add, Text, , Press 8 for Email - Mining
+        Gui, Add, Button, Hidden w0 h0 Default gHandleActionSelection, Save
+    } 
+    Gui, Show, w300 h400, %GuiTitle%
+    return
+}
+
+#IfWinActive, Action Selector
+1:: ActionSelection := "Quick Call", Gosub, HandleActionSelection
+2:: ActionSelection := "Email - New Inquiry", Gosub, HandleActionSelection
+3:: ActionSelection := "Text - Opt In", Gosub, HandleActionSelection
+4:: ActionSelection := "Email - Follow Up", Gosub, HandleActionSelection
+5:: ActionSelection := "Text - Follow Up", Gosub, HandleActionSelection
+6:: ActionSelection := "Email - Trade In", Gosub, HandleActionSelection
+7:: ActionSelection := "Text - Trade In", Gosub, HandleActionSelection
+8:: ActionSelection := "Email - Mining", Gosub, HandleActionSelection
+
+Escape:: Gosub, HandleEscape
+#IfWinActive
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Launch New Chrome Window
+^!t:: Run, chrome.exe
+
+; Misc Hotkeys
+
+#`::
+InputBox, userInput, Enter a number, How many times do you want to repeat the block of code?
+Loop, %userInput%
+{
+    MoveClick(EmailTabButton)
+    MoveClick(TemplateCatagoryDropDownMenu)
+    MoveClick(PersonalTemplateButton)
+    MoveClick(TemplateDropDownMenu)
+    MoveClick(TemplateSelection7)
+    Sleep, 1000
+    MoveClick(EmailSendButton)
+    Sleep, 2000
+    Send, ^{Right}
+    Sleep, 3000
+}
+return
+
++F5::
+    ; Check if Chrome is active
+    IfWinNotExist, Google Sheets
+    {
+        ; If Chrome is not active, activate it and open a new tab with the specified URL
+        Run, chrome.exe "https://sheets.google.com"
+        WinWait, Google Sheets
+    }
+    else
+    {
+        ; If Chrome is already active, open a new tab with the specified URL
+        WinActivate, Google
+        Send, ^t
+        Sleep, 100
+        Send, https://sheets.google.com
+    }
+return
+
++F4::
+    ; Check if Chrome is active
+    IfWinNotExist, Google Docs
+    {
+        ; If Chrome is not active, activate it and open a new tab with the specified URL
+        Run, chrome.exe "https://docs.google.com"
+        WinWait, Google Docs
+    }
+    else
+    {
+        ; If Chrome is already active, open a new tab with the specified URL
+        WinActivate, Google
+        Send, ^t
+        Sleep, 100
+        Send, https://docs.google.com
+    }
+return
+
+PgDn::
+    ; Check if Chrome is active
+    WinActivate, ahk_exe chrome.exe
+    Sleep, 700
+
+    ; Activate the tab with the specified title
+    WinActivate, Home / DriveCentric
+    Sleep, 700
+
+    ; Additional mouse actions after opening the Shift+F3 URL
+    MouseMove, 33, 225
+    SendEvent {Click}
+    Sleep, 300
+    MouseMove, 360, 225
+    SendEvent {Click}
+return
+
+#Right::
+    CoordMode, mouse, Screen
+    MouseGetPos, xOrigin, yOrigin
+    MouseMove, 1644, 529, 0
+    SendEvent, {Click}
+    Sleep, 5
+    MouseMove, %xOrigin%, %yOrigin%, 0
+    CoordMode, Mouse, Window
+return
+
+#Left::
+    CoordMode, mouse, Screen
+    MouseGetPos, xOrigin, yOrigin
+    MouseMove, 276, 529, 0
+    SendEvent, {Click}
+    Sleep, 5
+    MouseMove, %xOrigin%, %yOrigin%, 0
+    CoordMode, Mouse, Window
+return
+
+#1::
+    filePath := "C:\Users\jfadelli\Desktop\AHK\txt files\texts\text_1.txt"
+    file := FileOpen(filePath, "r")
+    if (file)
+    {
+        fileContents := file.Read()
+        file.Close()
+        clipboard := fileContents
+    }
+    else
+    {
+        MsgBox, Failed to open the file., 100
+    }
+    send, ^v
+Return
+
+#2::
+    Click, 943, 403
+    Sleep, 250
+    Click, 943, 447
+    Sleep, 500
+    Click, 1108, 403
+    Sleep, 250
+    Click, 1108, 490
+    Sleep, 750
+    Click, 593, 484
+    Sleep, 5
+    Click, 593, 484
+    Sleep, 5
+    Click, 593, 484
+
+
+
+    filePathSubject := "C:\Users\jfadelli\Desktop\AHK\txt files\emails\blind_follow_up_subject_1.txt"
+    fileSubject := FileOpen(filePathSubject, "r")
+    if (fileSubject)
+        {
+            fileSubjectContents := fileSubject.Read()
+            fileSubject.Close()
+            clipboard := fileSubjectContents
+        }
+        else
+        {
+            MsgBox, Failed to open the body file., 100
+        }
+    send, ^v
+    sleep, 300
+
+    filePathBody := "C:\Users\jfadelli\Desktop\AHK\txt files\emails\blind_follow_up_body_1.txt"
+    fileBody := FileOpen(filePathBody, "r")
+
+
+    
+    if (fileBody)
+    {
+        fileContents := fileBody.Read()
+        fileBody.Close()
+        clipboard := fileContents
+    }
+    else
+    {
+        MsgBox, Failed to open the body file., 100
+    }
+    MouseMove, 720, 750
+    send, {Click}
+    send, { Backspace }
+    sleep, 10
+    send, ^v
+
+Return
+
+#3::
+    filePath := "C:\Users\jfadelli\Desktop\AHK\txt files\3.txt"
+    file := FileOpen(filePath, "r")
+    if (file)
+    {
+        fileContents := file.Read()
+        file.Close()
+        clipboard := fileContents
+    }
+    else
+    {
+        MsgBox, Failed to open the file., 100
+    }
+    send, ^v
+    Click, 635, 184
+    Sleep, 10
+    Click, 635, 184
+    Sleep, 10
+    Send ^c
+    Sleep 10,
+    Click, 600, 407
+    sleep,5 
+    Click, 600, 407
+    sleep,5 
+    Send, ^v
+    send, {backspace}
+    Return
+
+#4::
+    filePath := "C:\Users\jfadelli\Desktop\AHK\txt files\blind_initial_email_2.txt"
+    file := FileOpen(filePath, "r")
+    if (file)
+    {
+        fileContents := file.Read()
+        file.Close()
+        clipboard := fileContents
+    }
+    else
+    {
+        MsgBox, Failed to open the file., 100
+    }
+    send, ^v
+Return
+
+#0:: send, https://www.premierkiaofcarlsbad.com/credit-application
+
+#u::
+    ; Copy currently selected text to clipboard
+    Send, ^c
+    ClipWait
+    
+    ; Get the clipboard content
+    ClipboardContent := Clipboard
+    
+    ; If there's text in the clipboard
+    if (ClipboardContent != "") {
+        ; Open new Chrome tab with the specified URL
+        Run, chrome.exe "https://www.premierkiaofcarlsbad.com/inventory?keyword="%ClipboardContent%"&submit=Submit&type=used",, UseErrorLevel
+        ; Check for errors
+        if ErrorLevel
+            MsgBox, Error opening Chrome tab.
+    } else {
+        MsgBox, No text selected to use in the URL.
+    }
+return
+
+#n::
+    ; Copy currently selected text to clipboard
+    Send, ^c
+    ClipWait
+    
+    ; Get the clipboard content
+    ClipboardContent := Clipboard
+    
+    ; If there's text in the clipboard
+    if (ClipboardContent != "") {
+        ; Open new Chrome tab with the specified URL
+        Run, chrome.exe "https://www.premierkiaofcarlsbad.com/inventory?keyword="%ClipboardContent%"&submit=Submit&type=new",, UseErrorLevel
+        ; Check for errors
+        if ErrorLevel
+            MsgBox, Error opening Chrome tab.
+    } else {
+        MsgBox, No text selected to use in the URL.
+    }
+return
+
+#c:: Run, chrome.exe "https://dealers.costcoauto.com/"
+return
+
+#Enter::
+MouseGetPos, xOrigin, yOrigin
+MoveClick(EmailSendButton)
+MouseMove, %xOrigin%, %yOrigin%
+return
+
+
+
+; ; Remap Control + XButton1 to copy
+; ^XButton1::
+;     Send, ^c
+;     return
+
+; ; Remap Control + XButton2 to paste
+; ^XButton2::
+;     Send, ^v
+;     return
+
+; USED CAR CUSTOMERS
+; ////////////////////////////////////////////////////
+; XButton2::
+    ; Send, ^w
+    ; return
+
+; ; XButton1:: 
+;     Send, {Click}
+;     ClipWait
+;     ClipboardContent := Clipboard
+;     if (ClipboardContent != "") {
+;         ; Open new Chrome tab with the specified URL
+;         Run, chrome.exe "https://www.premierkiaofcarlsbad.com/inventory?keyword="%ClipboardContent%"&submit=Submit&type=used",, UseErrorLevel
+;         ; Check for errors
+;         if ErrorLevel
+;             MsgBox, Error opening Chrome tab.
+;     } else {
+;         MsgBox, No text selected to use in the URL.
+;     }
+;     return
+; /////////////////////////////////////////////////////////
+F1::
+Click 1190, 402
+Sleep, 2500
+Click 1184, 113
+Sleep, 1500
+Click 891, 407
+Sleep, 250
+Click 767, 492
+Sleep, 250
+Click 1200, 607
+
+F2:: 
+CoordMode, mouse, Screen
+MouseGetPos, xOrigin, yOrigin
+MouseMove, 1644, 529, 0
+SendEvent, {Click}
+Sleep, 5
+MouseMove, %xOrigin%, %yOrigin%, 0
+CoordMode, Mouse, Window
+Return
