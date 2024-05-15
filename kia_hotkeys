@@ -8,20 +8,22 @@ global Dwell := 500
 global TemplateCatagoryDropDownMenu := {x: 950, y: 396, sleepTime:500}
 global PersonalTemplateButton := {x: 920, y:465, sleepTime:500}
 global TemplateDropDownMenu:= {x:1100,y:400, sleepTime:500}
-global TemplateSelection1:= {x:1100, y:445, sleepTime:0}
-global TemplateSelection2:= {x: 1100, y:460, sleepTime:0}
-global TemplateSelection3:= {x: 1100, y: 480, sleepTime:0}
-global TemplateSelection4:= {x: 1100, y:500, sleepTime:0}
-global TemplateSelection5:= {x: 1100, y:565, sleepTime:0}
-global TemplateSelection6:= {x: 1100, y:585, sleepTime:0}
-global TemplateSelection7:= {x: 1100, y:605, sleepTime:0}
+global TemplateSelection1:= {x:1100, y:445, sleepTime:1500}
+global TemplateSelection2:= {x: 1100, y:460, sleepTime:1500}
+global TemplateSelection3:= {x: 1100, y: 480, sleepTime:1500}
+global TemplateSelection4:= {x: 1100, y:500, sleepTime:1500}
+global TemplateSelection5:= {x: 1100, y:565, sleepTime:1500}
+global TemplateSelection6:= {x: 1100, y:585, sleepTime:1500}
+global TemplateSelection7:= {x: 1100, y:600, sleepTime:1500}
+global TemplateSelection8:= {x: 1100, y:644, sleepTime:1500}
+global TemplateSelection9:= {x: 1100, y:681, sleepTime:1500}
 global CallTabButton:= {x:660, y:350, sleepTime:250}
-global EmailTabButton:= {x:765, y:350, sleepTime:750}
+global EmailTabButton:= {x:765, y:350, sleepTime:1500}
 global TextTabButton:= {x: 870, y: 350, sleepTime:250}
-global OptInButton := {x:1183, y:525, sleepTime:100}
-global CallButton := {x:1184 , y:411 , sleepTime:500}
+global OptInButton := {x:1183, y:525, sleepTime:500}
+global CallButton := {x:1184 , y:411 , sleepTime:1000}
 global RefreshSecondBrowserButton := {x:93, y:-1017 , sleepTime:2500}
-global EndCallButton := {x:1170, y:120 , sleepTime:1000}
+global EndCallButton := {x:1170, y:120 , sleepTime:2000}
 global CallOutcomeDropdownMenu := {x:830, y:419, sleepTime:500}
 global CallOutcomeDidNotLeaveVoicemail := {x:830, y:499, sleepTime:250}
 global LogCallButton := {x:1200, y:628, sleepTime:250}
@@ -29,8 +31,28 @@ global TextBoxTextArea := {x:536, y:401, sleepTime: 250}
 global FirstName := {x:633, y:174, sleepTime:250}
 global FirstNameUnderlineSpot := {x:650, y: 401, sleepTime:10}
 global VehicleUnderlineSpot := {x:785, y: 425, sleepTime:10}
-global EmailSendButton := {x:1184, y:938, sleepTime: 100}
+global EmailSendButton := {x:1184, y:938, sleepTime: 1000}
 global TextSendButton := {x:1184, y:938, sleepTime: 100}
+global SecondWindowCallOutcomeDropDownMenu := {x: 500,y: -667, sleepTime: 250}
+global SecondWindowOutcomeLeftVoicemail := {x: 500,y: -602, sleepTime: 250}
+global SecondWindowLogCall := {x: 876,y: -458, sleepTime: 0}
+global TextTemplateButton := {x:1064, y:473, sleepTime: 1500}
+global TextTemplateSelection1 := {x: 666,y: 525,sleepTime: 500}
+global TextTemplateSelection2 := {x: 666,y: 555,sleepTime: 500}
+global TextTemplateSelection3 := {x: 666,y: 605,sleepTime: 500}
+global TextTemplateSelection5 := {x: 666,y: 733,sleepTime: 1000}
+global TextTemplateSelectionConfirmationButton := {x: 1365,y: 810, sleepTime: 1500 }
+global TextSendButton := {x:1183, y:467, sleepTime:1000}
+global CancelFireAi := {x:1155, y:518, sleepTime:250}
+global NotTextingNumber := {x:1167, y:423, sleepTime:250}
+global ResendOptInTextButton := {x:1172, y:516, sleepTime:250}
+global RemoveTaskConfirmation := {x:1129, y:643, sleepTime:100}
+global TextNotAValidNumberClear := {x:1176, y:445, sleepTime:200}
+global NextCustomerButton := {x:1644, y:535, sleepTime:1500}
+global SearchForCustomer := {x:1620, y:115, sleepTime:250}
+global SelectCustomerFromSearch := {x:1620, y:170, sleepTime: 500}
+global ExitCustomerProfilePage := {x:1394, y:155, sleepTime: 500}
+
 
 MoveClick(obj) {
     ; Extract relevant information from the object
@@ -90,6 +112,12 @@ MainLoop:
     } else if (ActionSelection = "Text - Opt In" ){
         MoveClick(TextTabButton)
         MoveClick(OptInButton)
+    } else if (ActionSelection = "Text - New Inquiry" ){
+        MoveClick(TextTabButton)
+        MoveClick(TextTemplateButton)
+        MoveClick(TextTemplateSelection1)
+        MoveClick(TextTemplateSelectionConfirmationButton)
+        MoveClick(TextSendButton)
     } else if (ActionSelection = "Email - Follow Up") {
         MoveClick(EmailTabButton)
         MoveClick(TemplateCatagoryDropDownMenu)
@@ -98,28 +126,10 @@ MainLoop:
         MoveClick(TemplateSelection2)
     } else if (ActionSelection = "Text - Follow Up") {
         MoveClick(TextTabButton)
-        MoveClick(TextBoxTextArea)
-        filePathSubject := "C:\Users\jfadelli\Desktop\AHK\txt files\texts\text_2.txt"
-        fileSubject := FileOpen(filePathSubject, "r")
-        if (fileSubject)
-        {
-            fileSubjectContents := fileSubject.Read()
-            fileSubject.Close()
-            clipboard := fileSubjectContents
-        }
-        else
-        {
-            MsgBox, Failed to open the subject file., 100
-        }
-        send, ^v
-        MoveDoubleClick(FirstName)
-        send, ^c
-        MoveDoubleClick(FirstNameUnderlineSpot)
-        send, ^v
-        send, {Backspace}
-        sleep, 10
-        MoveDoubleClick(VehicleUnderlineSpot)
-
+        MoveClick(TextTemplateButton)
+        MoveClick(TextTemplateSelection2)
+        MoveClick(TextTemplateSelectionConfirmationButton)
+        MoveClick(TextSendButton)
     } else if (ActionSelection = "Email - Trade In") {
         MoveClick(EmailTabButton)
         MoveClick(TemplateCatagoryDropDownMenu)
@@ -169,6 +179,7 @@ ShowGUI(GuiTitle) {
         Gui, Add, Text, , Press 1 for Quick Call
         Gui, Add, Text, , Press 2 for Email - New Inquiry
         Gui, Add, Text, , Press 3 for Text - Opt In
+        Gui, Add, Text, , Press 3 for Text - New Inquiry
         Gui, Add, Text, , ---------------------------------
         Gui, Add, Text, , Press 4 for Email - Follow Up
         Gui, Add, Text, , Press 5 for Text - Follow Up
@@ -187,6 +198,7 @@ ShowGUI(GuiTitle) {
 1:: ActionSelection := "Quick Call", Gosub, HandleActionSelection
 2:: ActionSelection := "Email - New Inquiry", Gosub, HandleActionSelection
 3:: ActionSelection := "Text - Opt In", Gosub, HandleActionSelection
++3:: ActionSelection := "Text - New Inquiry", Gosub, HandleActionSelection
 4:: ActionSelection := "Email - Follow Up", Gosub, HandleActionSelection
 5:: ActionSelection := "Text - Follow Up", Gosub, HandleActionSelection
 6:: ActionSelection := "Email - Trade In", Gosub, HandleActionSelection
@@ -204,20 +216,71 @@ Escape:: Gosub, HandleEscape
 
 ; Misc Hotkeys
 
+; Text Loop
 #`::
-InputBox, userInput, Enter a number, How many times do you want to repeat the block of code?
-Loop, %userInput%
+; Path to the text file containing the names
+counter := 0
+filePath := "C:\Users\jfadelli\Desktop\AHK\txt files\names\names2.txt"
+; Open the file for reading
+FileRead, fileContent, %filePath%
+; Split the file content into lines (names)
+Loop, parse, fileContent, `n, `r
 {
+    counter ++ 1
+    currentName := A_LoopField
+    ; Trim any extra whitespace from the name
+    currentName := Trim(currentName)
+    
+    MoveClick(SearchForCustomer)
+    Send, ^a
+    Send, {Backspace}
+    Sleep, 50
+    Send, %currentName%
+    Sleep, 750
+    MoveClick(SelectCustomerFromSearch)
+    MoveClick(TextTabButton)
+    MoveClick(TextTemplateButton)
+    MoveClick(TextTemplateSelection5)
+    MoveClick(TextTemplateSelectionConfirmationButton)
+    MoveClick(TextSendButton)
+    MoveClick(ExitCustomerProfilePage)
+    if (mod(counter, 5) == 0)
+        {
+            MsgBox, 4, , Reached 5 cycles. Continue? (Yes/No)
+            IfMsgBox, No
+                break  ; Stop the loop if 'No' is clicmod(counter,
+        }
+}
+
+return
+
+; Email loop 2.0
++#`::
+; Path to the text file containing the names
+filePath := "C:\Users\jfadelli\Desktop\AHK\txt files\names\names.txt"
+; Open the file for reading
+FileRead, fileContent, %filePath%
+; Split the file content into lines (names)
+Loop, parse, fileContent, `n, `r
+{
+    currentName := A_LoopField
+    ; Trim any extra whitespace from the name
+    currentName := Trim(currentName)
+    
+    MoveClick(SearchForCustomer)
+    Send, ^a
+    Send, {Backspace}
+    Sleep, 50
+    Send, %currentName%
+    Sleep, 750
+    MoveClick(SelectCustomerFromSearch)
     MoveClick(EmailTabButton)
     MoveClick(TemplateCatagoryDropDownMenu)
     MoveClick(PersonalTemplateButton)
     MoveClick(TemplateDropDownMenu)
-    MoveClick(TemplateSelection7)
-    Sleep, 1000
+    MoveClick(TemplateSelection9)
     MoveClick(EmailSendButton)
-    Sleep, 2000
-    Send, ^{Right}
-    Sleep, 3000
+    MoveClick(ExitCustomerProfilePage)
 }
 return
 
@@ -294,122 +357,6 @@ return
     CoordMode, Mouse, Window
 return
 
-#1::
-    filePath := "C:\Users\jfadelli\Desktop\AHK\txt files\texts\text_1.txt"
-    file := FileOpen(filePath, "r")
-    if (file)
-    {
-        fileContents := file.Read()
-        file.Close()
-        clipboard := fileContents
-    }
-    else
-    {
-        MsgBox, Failed to open the file., 100
-    }
-    send, ^v
-Return
-
-#2::
-    Click, 943, 403
-    Sleep, 250
-    Click, 943, 447
-    Sleep, 500
-    Click, 1108, 403
-    Sleep, 250
-    Click, 1108, 490
-    Sleep, 750
-    Click, 593, 484
-    Sleep, 5
-    Click, 593, 484
-    Sleep, 5
-    Click, 593, 484
-
-
-
-    filePathSubject := "C:\Users\jfadelli\Desktop\AHK\txt files\emails\blind_follow_up_subject_1.txt"
-    fileSubject := FileOpen(filePathSubject, "r")
-    if (fileSubject)
-        {
-            fileSubjectContents := fileSubject.Read()
-            fileSubject.Close()
-            clipboard := fileSubjectContents
-        }
-        else
-        {
-            MsgBox, Failed to open the body file., 100
-        }
-    send, ^v
-    sleep, 300
-
-    filePathBody := "C:\Users\jfadelli\Desktop\AHK\txt files\emails\blind_follow_up_body_1.txt"
-    fileBody := FileOpen(filePathBody, "r")
-
-
-    
-    if (fileBody)
-    {
-        fileContents := fileBody.Read()
-        fileBody.Close()
-        clipboard := fileContents
-    }
-    else
-    {
-        MsgBox, Failed to open the body file., 100
-    }
-    MouseMove, 720, 750
-    send, {Click}
-    send, { Backspace }
-    sleep, 10
-    send, ^v
-
-Return
-
-#3::
-    filePath := "C:\Users\jfadelli\Desktop\AHK\txt files\3.txt"
-    file := FileOpen(filePath, "r")
-    if (file)
-    {
-        fileContents := file.Read()
-        file.Close()
-        clipboard := fileContents
-    }
-    else
-    {
-        MsgBox, Failed to open the file., 100
-    }
-    send, ^v
-    Click, 635, 184
-    Sleep, 10
-    Click, 635, 184
-    Sleep, 10
-    Send ^c
-    Sleep 10,
-    Click, 600, 407
-    sleep,5 
-    Click, 600, 407
-    sleep,5 
-    Send, ^v
-    send, {backspace}
-    Return
-
-#4::
-    filePath := "C:\Users\jfadelli\Desktop\AHK\txt files\blind_initial_email_2.txt"
-    file := FileOpen(filePath, "r")
-    if (file)
-    {
-        fileContents := file.Read()
-        file.Close()
-        clipboard := fileContents
-    }
-    else
-    {
-        MsgBox, Failed to open the file., 100
-    }
-    send, ^v
-Return
-
-#0:: send, https://www.premierkiaofcarlsbad.com/credit-application
 
 #u::
     ; Copy currently selected text to clipboard
@@ -422,7 +369,7 @@ Return
     ; If there's text in the clipboard
     if (ClipboardContent != "") {
         ; Open new Chrome tab with the specified URL
-        Run, chrome.exe "https://www.premierkiaofcarlsbad.com/inventory?keyword="%ClipboardContent%"&submit=Submit&type=used",, UseErrorLevel
+        Run, chrome.exe "https://www.premierkiaofcarlsbad.com/used-vehicles/?q="%ClipboardContent%"&_dFR%5Btype%5D%5B0%5D=Used",, UseErrorLevel
         ; Check for errors
         if ErrorLevel
             MsgBox, Error opening Chrome tab.
@@ -442,7 +389,7 @@ return
     ; If there's text in the clipboard
     if (ClipboardContent != "") {
         ; Open new Chrome tab with the specified URL
-        Run, chrome.exe "https://www.premierkiaofcarlsbad.com/inventory?keyword="%ClipboardContent%"&submit=Submit&type=new",, UseErrorLevel
+        Run, chrome.exe "https://www.premierkiaofcarlsbad.com/new-vehicles/?q="%ClipboardContent%"&_dFR%5Btype%5D%5B0%5D=New",, UseErrorLevel
         ; Check for errors
         if ErrorLevel
             MsgBox, Error opening Chrome tab.
@@ -451,8 +398,65 @@ return
     }
 return
 
-#c:: Run, chrome.exe "https://dealers.costcoauto.com/"
+^#w:: ; Wishlist
+    Run, chrome.exe "https://docs.google.com/spreadsheets/d/1ky3eBpprlqT-PRmj6WgcM7yrUjQLpl0SRuzP3uvJMro/edit#gid=0"
 return
+
+
+;get monroney
+; Hotkey to trigger the input box
+^#v::  ; win + ctrl + v as the hotkey.
+InputBox, vin, Enter VIN, Please enter the VIN:
+if ErrorLevel  ; Checks if the user pressed Cancel.
+{
+    MsgBox, You cancelled.
+}
+else
+{
+    url := "https://get-monroney-server-43d02c80534a.herokuapp.com/getMonroney/" . vin
+    Run, chrome.exe %url%
+}
+return
+
+^#n:: ; New Cars
+    Run, chrome.exe "https://www.premierkiaofcarlsbad.com/new-vehicles/"
+return
+
+
+^#u:: ;Used carsv
+    Run, chrome.exe "https://www.premierkiaofcarlsbad.com/used-vehicles/"
+return
+
+^#r:: ;Recon
+    Run, chrome.exe "https://app2.reconvelocity.com/login"
+return
+
+^#k:: ;Kdealer
+    Run, chrome.exe "https://www.kdealer.com/commonDashboard"
+return 
+
+; 
+#c:: ;Costco Auto Program
+    Run, chrome.exe "https://dealers.costcoauto.com/" ;
+return
+
+>!n::  ; This is the hotkey for Right Alt + N
+    Send, 760.496.3140 
+return
+
+>!j::  ; This is the hotkey for Right Alt + J
+    Send, Jason 
+return
+
+
+#LButton::
+MouseGetPos, xOrigin, yOrigin
+Send, {Click}
+Sleep, 100
+MoveClick(RemoveTaskConfirmation)
+MouseMove, %xOrigin%, %yOrigin%
+return
+
 
 #Enter::
 MouseGetPos, xOrigin, yOrigin
@@ -460,7 +464,26 @@ MoveClick(EmailSendButton)
 MouseMove, %xOrigin%, %yOrigin%
 return
 
+>^Enter::
+MouseGetPos, xOrigin, yOrigin
+MoveClick(EmailSendButton)
+MouseMove, %xOrigin%, %yOrigin%
+return
 
+^#Enter::
+MouseGetPos, xOrigin, yOrigin
+MoveClick(ResendOptInTextButton)
+MouseMove, %xOrigin%, %yOrigin%
+return
+
+
+#v::
+    MouseGetPos, xOrigin, yOrigin
+    MoveClick(SecondWindowCallOutcomeDropDownMenu)
+    MoveClick(SecondWindowOutcomeLeftVoicemail)
+    MoveClick(SecondWindowLogCall)
+    MouseMove, %xOrigin%, %yOrigin%
+return 
 
 ; ; Remap Control + XButton1 to copy
 ; ^XButton1::
