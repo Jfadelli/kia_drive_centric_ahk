@@ -1,58 +1,10 @@
 SetTitleMatchMode, 2
 CoordMode, Mouse, Screen
+#Include ./coords.ahk
 
 global GuiTitle := ""
 global ActionSelection := ""
-
-global Dwell := 500
-global TemplateCatagoryDropDownMenu := {x: 950, y: 396, sleepTime:500}
-global PersonalTemplateButton := {x: 920, y:465, sleepTime:500}
-global TemplateDropDownMenu:= {x:1100,y:400, sleepTime:500}
-global TemplateSelection1:= {x:1100, y:445, sleepTime:1500}
-global TemplateSelection2:= {x: 1100, y:460, sleepTime:1500}
-global TemplateSelection3:= {x: 1100, y: 480, sleepTime:1500}
-global TemplateSelection4:= {x: 1100, y:500, sleepTime:1500}
-global TemplateSelection5:= {x: 1100, y:565, sleepTime:1500}
-global TemplateSelection6:= {x: 1100, y:585, sleepTime:1500}
-global TemplateSelection7:= {x: 1100, y:600, sleepTime:1500}
-global TemplateSelection8:= {x: 1100, y:644, sleepTime:1500}
-global TemplateSelection9:= {x: 1100, y:681, sleepTime:1500}
-global CallTabButton:= {x:660, y:350, sleepTime:250}
-global EmailTabButton:= {x:765, y:350, sleepTime:1500}
-global TextTabButton:= {x: 870, y: 350, sleepTime:250}
-global OptInButton := {x:1183, y:525, sleepTime:500}
-global CallButton := {x:1184 , y:411 , sleepTime:1000}
-global RefreshSecondBrowserButton := {x:93, y:-1017 , sleepTime:2500}
-global EndCallButton := {x:1170, y:120 , sleepTime:2000}
-global CallOutcomeDropdownMenu := {x:830, y:419, sleepTime:500}
-global CallOutcomeDidNotLeaveVoicemail := {x:830, y:499, sleepTime:250}
-global LogCallButton := {x:1200, y:628, sleepTime:250}
-global TextBoxTextArea := {x:536, y:401, sleepTime: 250}
-global FirstName := {x:633, y:174, sleepTime:250}
-global FirstNameUnderlineSpot := {x:650, y: 401, sleepTime:10}
-global VehicleUnderlineSpot := {x:785, y: 425, sleepTime:10}
-global EmailSendButton := {x:1184, y:938, sleepTime: 1000}
-global TextSendButton := {x:1184, y:938, sleepTime: 100}
-global SecondWindowCallOutcomeDropDownMenu := {x: 500,y: -667, sleepTime: 250}
-global SecondWindowOutcomeLeftVoicemail := {x: 500,y: -602, sleepTime: 250}
-global SecondWindowLogCall := {x: 876,y: -458, sleepTime: 0}
-global TextTemplateButton := {x:1064, y:473, sleepTime: 1500}
-global TextTemplateSelection1 := {x: 666,y: 525,sleepTime: 500}
-global TextTemplateSelection2 := {x: 666,y: 555,sleepTime: 500}
-global TextTemplateSelection3 := {x: 666,y: 605,sleepTime: 500}
-global TextTemplateSelection5 := {x: 666,y: 733,sleepTime: 1000}
-global TextTemplateSelectionConfirmationButton := {x: 1365,y: 810, sleepTime: 1500 }
-global TextSendButton := {x:1183, y:467, sleepTime:1000}
-global CancelFireAi := {x:1155, y:518, sleepTime:250}
-global NotTextingNumber := {x:1167, y:423, sleepTime:250}
-global ResendOptInTextButton := {x:1172, y:516, sleepTime:250}
-global RemoveTaskConfirmation := {x:1129, y:643, sleepTime:100}
-global TextNotAValidNumberClear := {x:1176, y:445, sleepTime:200}
-global NextCustomerButton := {x:1644, y:535, sleepTime:1500}
-global SearchForCustomer := {x:1620, y:115, sleepTime:250}
-global SelectCustomerFromSearch := {x:1620, y:170, sleepTime: 500}
-global ExitCustomerProfilePage := {x:1394, y:155, sleepTime: 500}
-
+global Dwell := 250
 
 MoveClick(obj) {
     ; Extract relevant information from the object
@@ -63,6 +15,7 @@ MoveClick(obj) {
     Sleep, 25
     Click
     Sleep, % sleepTime
+    Sleep, % Dwell
 }
 
 MoveDoubleClick(obj){
@@ -103,6 +56,10 @@ MainLoop:
         MoveClick(CallOutcomeDropdownMenu)
         MoveClick(CallOutcomeDidNotLeaveVoicemail)
         MoveClick(LogCallButton)
+    } else if (ActionSelection = "Quick Call - Log 2nd Call") {
+        MoveClick(LogCall2OutcomeDropDown)
+        MoveClick(LogCall2OutcomeDropDownDidNotLeaveVoicemail)
+        MoveClick(LogCall2Button)
     } else if (ActionSelection = "Email - New Inquiry") {
         MoveClick(EmailTabButton)
         MoveClick(TemplateCatagoryDropDownMenu)
@@ -120,10 +77,10 @@ MainLoop:
         MoveClick(TextSendButton)
     } else if (ActionSelection = "Email - Follow Up") {
         MoveClick(EmailTabButton)
-        MoveClick(TemplateCatagoryDropDownMenu)
-        MoveClick(PersonalTemplateButton)
-        MoveClick(TemplateDropDownMenu)
-        MoveClick(TemplateSelection2)
+        MoveClick(EmailTemplateCatagoryDropDownMenu)
+        MoveClick(EmailPersonalTemplateButton)
+        MoveClick(EmailTemplateDropDownMenu)
+        MoveClick(EmailTemplateFollowUpGeneral)
     } else if (ActionSelection = "Text - Follow Up") {
         MoveClick(TextTabButton)
         MoveClick(TextTemplateButton)
@@ -136,6 +93,12 @@ MainLoop:
         MoveClick(PersonalTemplateButton)
         MoveClick(TemplateDropDownMenu)
         MoveClick(TemplateSelection3)
+    } else if (ActionSelection = "Email - Back In Stock") {
+        MoveClick(EmailTabButton)
+        MoveClick(TemplateCatagoryDropDownMenu)
+        MoveClick(PersonalTemplateButton)
+        MoveClick(TemplateDropDownMenu)
+        MoveClick(EMailTemplateBackInStock)
     } else if (ActionSelection = "Text - Trade In") {
         MoveClick(TextTabButton)
         MoveClick(TextBoxTextArea)
@@ -177,11 +140,14 @@ ShowGUI(GuiTitle) {
         Gui +ToolWindow +AlwaysOnTop
         Gui, Add, Text,, Select an option:
         Gui, Add, Text, , Press 1 for Quick Call
+        Gui, Add, Text, , Press Shift + 1 for Quick Call
         Gui, Add, Text, , Press 2 for Email - New Inquiry
         Gui, Add, Text, , Press 3 for Text - Opt In
         Gui, Add, Text, , Press 3 for Text - New Inquiry
         Gui, Add, Text, , ---------------------------------
         Gui, Add, Text, , Press 4 for Email - Follow Up
+        Gui, Add, Text, , Press Shift + 4 for Email - Back In Stock
+
         Gui, Add, Text, , Press 5 for Text - Follow Up
         Gui, Add, Text, , ---------------------------------
         Gui, Add, Text, , Press 6 for Email - Trade In
@@ -196,10 +162,12 @@ ShowGUI(GuiTitle) {
 
 #IfWinActive, Action Selector
 1:: ActionSelection := "Quick Call", Gosub, HandleActionSelection
++1:: ActionSelection := "Quick Call - Log 2nd Call", Gosub, HandleActionSelection
 2:: ActionSelection := "Email - New Inquiry", Gosub, HandleActionSelection
 3:: ActionSelection := "Text - Opt In", Gosub, HandleActionSelection
 +3:: ActionSelection := "Text - New Inquiry", Gosub, HandleActionSelection
 4:: ActionSelection := "Email - Follow Up", Gosub, HandleActionSelection
++4:: ActionSelection := "Email - Back In Stock", Gosub, HandleActionSelection
 5:: ActionSelection := "Text - Follow Up", Gosub, HandleActionSelection
 6:: ActionSelection := "Email - Trade In", Gosub, HandleActionSelection
 7:: ActionSelection := "Text - Trade In", Gosub, HandleActionSelection
@@ -218,9 +186,47 @@ Escape:: Gosub, HandleEscape
 
 ; Text Loop
 #`::
-; Path to the text file containing the names
 counter := 0
-filePath := "C:\Users\jfadelli\Desktop\AHK\txt files\names\names2.txt"
+; Path to the text file containing the names
+filePath := "C:\Users\jfadelli\Desktop\AHK\txt files\names\text.txt"
+; Open the file for reading
+FileRead, fileContent, %filePath%
+; Split the file content into lines (names)
+Loop, parse, fileContent, `n, `r
+{
+    counter ++ 1
+    currentName := A_LoopField
+    ; Trim any extra whitespace from the name
+    currentName := Trim(currentName)
+    
+    MoveClick(SearchForCustomer)
+    Send, ^a
+    Send, {Backspace}
+    Sleep, 50
+    Send, %currentName%
+    Sleep, 1000
+    MoveClick(SelectCustomerFromSearch)
+    MoveClick(TextTabButton)
+    MoveClick(TextTemplateButton)
+    MoveClick(TextTemplateSelection5)
+    MoveClick(TextTemplateSelectionConfirmationButton)
+    MoveClick(TextSendButton)
+    MoveClick(ExitCustomerProfilePage)
+    if (mod(counter, 10) == 0)
+        {
+            MsgBox, 4, , Reached 5 cycles. Continue? (Yes/No)
+            IfMsgBox, No
+                break  ; Stop the loop if 'No' is clicmod(counter,
+        }
+}
+
+return
+
+; Email loop 2.0
++#`::
+counter := 0
+; Path to the text file containing the names
+filePath := "C:\Users\jfadelli\Desktop\AHK\txt files\names\email.txt"
 ; Open the file for reading
 FileRead, fileContent, %filePath%
 ; Split the file content into lines (names)
@@ -238,51 +244,24 @@ Loop, parse, fileContent, `n, `r
     Send, %currentName%
     Sleep, 750
     MoveClick(SelectCustomerFromSearch)
-    MoveClick(TextTabButton)
-    MoveClick(TextTemplateButton)
-    MoveClick(TextTemplateSelection5)
-    MoveClick(TextTemplateSelectionConfirmationButton)
-    MoveClick(TextSendButton)
+    MoveClick(EmailTabButton)
+    MoveClick(EmailTemplateCatagoryDropDownMenu)
+    MoveClick(EmailPersonalTemplateButton)
+    MoveClick(EmailTemplateDropDownMenu)
+    MoveClick(EmailTemplateMyOrphans)
+    MoveClick(EmailSendButton)
     MoveClick(ExitCustomerProfilePage)
-    if (mod(counter, 5) == 0)
+
+    if (mod(counter, 10) == 0)
         {
             MsgBox, 4, , Reached 5 cycles. Continue? (Yes/No)
             IfMsgBox, No
                 break  ; Stop the loop if 'No' is clicmod(counter,
         }
-}
-
+        
+    }
 return
 
-; Email loop 2.0
-+#`::
-; Path to the text file containing the names
-filePath := "C:\Users\jfadelli\Desktop\AHK\txt files\names\names.txt"
-; Open the file for reading
-FileRead, fileContent, %filePath%
-; Split the file content into lines (names)
-Loop, parse, fileContent, `n, `r
-{
-    currentName := A_LoopField
-    ; Trim any extra whitespace from the name
-    currentName := Trim(currentName)
-    
-    MoveClick(SearchForCustomer)
-    Send, ^a
-    Send, {Backspace}
-    Sleep, 50
-    Send, %currentName%
-    Sleep, 750
-    MoveClick(SelectCustomerFromSearch)
-    MoveClick(EmailTabButton)
-    MoveClick(TemplateCatagoryDropDownMenu)
-    MoveClick(PersonalTemplateButton)
-    MoveClick(TemplateDropDownMenu)
-    MoveClick(TemplateSelection9)
-    MoveClick(EmailSendButton)
-    MoveClick(ExitCustomerProfilePage)
-}
-return
 
 +F5::
     ; Check if Chrome is active
@@ -323,17 +302,16 @@ return
 PgDn::
     ; Check if Chrome is active
     WinActivate, ahk_exe chrome.exe
-    Sleep, 700
-
+    Sleep, 50
     ; Activate the tab with the specified title
     WinActivate, Home / DriveCentric
-    Sleep, 700
+    Sleep, 50
 
     ; Additional mouse actions after opening the Shift+F3 URL
     MouseMove, 33, 225
     SendEvent {Click}
-    Sleep, 300
-    MouseMove, 360, 225
+    Sleep, 750
+    MouseMove, 420, 225
     SendEvent {Click}
 return
 
@@ -473,6 +451,8 @@ return
 ^#Enter::
 MouseGetPos, xOrigin, yOrigin
 MoveClick(ResendOptInTextButton)
+Sleep, 5
+MoveClick(OptInButtonUpper)
 MouseMove, %xOrigin%, %yOrigin%
 return
 
